@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
+import { CodeCard } from "../CodeCard";
 
 export const Facets = () => {
   useEffect(() => {
@@ -38,9 +39,9 @@ export const Facets = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <CodePanel title="Antes" code={before} />
-          <CodePanel title="Depois" code={after} featured />
+        <div className="grid md:grid-cols-2 gap-6 items-stretch">
+          <CodeCard title="antes.R" code={before} preClassName="text-sm md:text-base" stretch />
+          <CodeCard title="depois.R" code={after} preClassName="text-sm md:text-base" featured stretch />
         </div>
 
         <div className="mt-8 rounded-xl border border-[var(--color-primary)]/35 bg-[var(--color-primary)]/10 p-5 text-center font-mono text-[var(--color-accent)]">
@@ -50,16 +51,3 @@ export const Facets = () => {
     </section>
   );
 };
-
-function CodePanel({ title, code, featured = false }: { title: string; code: string; featured?: boolean }) {
-  return (
-    <div className={`rounded-2xl overflow-hidden border ${featured ? "border-[var(--color-primary)]/45 glow-primary" : "border-white/10"} bg-[#1e1e1e]`}>
-      <div className="bg-[#2d2d2d] px-4 py-3 font-mono text-sm text-gray-300 border-b border-gray-800">
-        {title}
-      </div>
-      <pre className="!m-0 !bg-transparent p-5 overflow-x-auto text-sm md:text-base">
-        <code className="language-r">{code}</code>
-      </pre>
-    </div>
-  );
-}

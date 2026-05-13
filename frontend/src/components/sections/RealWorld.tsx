@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
+import { CodeCard } from "../CodeCard";
 
 export const RealWorld = () => {
   useEffect(() => {
@@ -39,14 +40,7 @@ export const RealWorld = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-6 items-stretch">
-          <div className="rounded-2xl bg-[#1e1e1e] border border-white/10 overflow-hidden">
-            <div className="bg-[#2d2d2d] px-4 py-3 font-mono text-sm text-gray-300 border-b border-gray-800">
-              dispersao_alunos.R
-            </div>
-            <pre className="!m-0 !bg-transparent p-5 overflow-x-auto text-base md:text-lg">
-              <code className="language-r">{code}</code>
-            </pre>
-          </div>
+          <CodeCard title="dispersao_alunos.R" code={code} preClassName="text-base md:text-lg" stretch />
 
           <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-primary)]/35 p-6">
             <h3 className="text-xl font-bold text-white mb-5">Grafico de dispersao</h3>

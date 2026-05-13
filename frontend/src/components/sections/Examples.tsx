@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, Circle } from "lucide-react";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
+import { CodeCard } from "../CodeCard";
 
 const cases = [
   {
@@ -57,8 +57,8 @@ export const Examples = () => {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-6 items-stretch">
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-6">
+          <div className="grid md:grid-cols-3 gap-3">
             {cases.map((item, index) => (
               <motion.button
                 key={item.title}
@@ -77,53 +77,30 @@ export const Examples = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-[var(--color-surface)] border border-white/10 overflow-hidden">
-            <div className="bg-[#2d2d2d] flex items-center justify-between px-4 py-2 border-b border-gray-800/50">
-              <div className="flex items-center gap-2">
-                <Circle className="w-3 h-3 text-red-500 fill-red-500" />
-                <Circle className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                <Circle className="w-3 h-3 text-green-500 fill-green-500" />
+          <div className="grid md:grid-cols-2 gap-6 items-stretch">
+            <AnimatePresence mode="wait">
+              <CodeCard title="aes_cores.R" code={active.code} animatedKey={activeTab} preClassName="text-[15px]" stretch />
+            </AnimatePresence>
+
+            <div className="rounded-2xl bg-[var(--color-surface)] border border-white/10 p-5">
+              <div className="relative h-64 border-l border-b border-white/30 ml-7 mb-6">
+                {points.map((point, index) => (
+                  <motion.span
+                    key={`${activeTab}-${index}`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className={`absolute w-4 h-4 rounded-full ${active.fixed || point.group === 0 ? "bg-blue-500" : "bg-emerald-400"}`}
+                    style={{ left: point.x, top: point.y }}
+                  />
+                ))}
               </div>
-              <div className="flex items-center gap-2 text-gray-400 text-xs tracking-wider">
-                <Terminal className="w-4 h-4" />
-                <span>aes_cores.R</span>
-              </div>
-              <span className="w-14" />
-            </div>
-            <div className="grid md:grid-cols-2">
-              <div className="bg-[#1e1e1e] p-5 overflow-x-auto">
-                <AnimatePresence mode="wait">
-                  <motion.pre
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    className="!m-0 !bg-transparent"
-                  >
-                    <code className="language-r text-[15px]">{active.code}</code>
-                  </motion.pre>
-                </AnimatePresence>
-              </div>
-              <div className="p-5">
-                <div className="relative h-64 border-l border-b border-white/30 ml-7 mb-6">
-                  {points.map((point, index) => (
-                    <motion.span
-                      key={`${activeTab}-${index}`}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className={`absolute w-4 h-4 rounded-full ${active.fixed || point.group === 0 ? "bg-blue-500" : "bg-emerald-400"}`}
-                      style={{ left: point.x, top: point.y }}
-                    />
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-3 text-sm">
-                  {active.legend.map((item, index) => (
-                    <span key={item} className="flex items-center gap-2 text-[var(--color-text-muted)]">
-                      <span className={`w-3 h-3 rounded-full ${active.fixed || index === 0 ? "bg-blue-500" : "bg-emerald-400"}`} />
-                      {item}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-3 text-sm">
+                {active.legend.map((item, index) => (
+                  <span key={item} className="flex items-center gap-2 text-[var(--color-text-muted)]">
+                    <span className={`w-3 h-3 rounded-full ${active.fixed || index === 0 ? "bg-blue-500" : "bg-emerald-400"}`} />
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
+import { CodeCard } from "../CodeCard";
 
 const geoms = [
   {
@@ -39,6 +40,12 @@ const geoms = [
     talk: "geom_boxplot() ajuda a comparar a distribuicao dos valores entre grupos.",
     type: "box",
   },
+];
+
+const boxplots = [
+  { label: "A", x: 18, low: 16, q1: 34, median: 48, q3: 62, high: 82 },
+  { label: "B", x: 48, low: 10, q1: 24, median: 39, q3: 55, high: 72 },
+  { label: "C", x: 78, low: 24, q1: 46, median: 59, q3: 74, high: 90 },
 ];
 
 export const Customization = () => {
@@ -79,26 +86,22 @@ export const Customization = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 items-stretch">
-          <div className="rounded-2xl bg-[#1e1e1e] border border-white/10 overflow-hidden">
-            <div className="bg-[#2d2d2d] px-4 py-3 font-mono text-sm text-gray-300 border-b border-gray-800">
-              geom_{current.label.toLowerCase()}.R
-            </div>
+          <div className="flex flex-col gap-5">
             <AnimatePresence mode="wait">
-              <motion.pre
-                key={active}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="!m-0 !bg-transparent p-6 overflow-x-auto text-base md:text-lg"
-              >
-                <code className="language-r">{current.code}</code>
-              </motion.pre>
+              <CodeCard
+                title={`geom_${current.label.toLowerCase()}.R`}
+                code={current.code}
+                animatedKey={active}
+                preClassName="text-base md:text-lg"
+              />
             </AnimatePresence>
-            <p className="p-6 pt-0 text-[var(--color-text-muted)] leading-relaxed">{current.talk}</p>
+            <p className="rounded-xl border border-white/10 bg-black/20 p-5 text-[var(--color-text-muted)] leading-relaxed">{current.talk}</p>
           </div>
 
           <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-primary)]/35 p-6">
-            <GeomPreview type={current.type} />
+            <AnimatePresence mode="wait">
+              <GeomPreview key={current.type} type={current.type} />
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -108,34 +111,103 @@ export const Customization = () => {
 
 function GeomPreview({ type }: { type: string }) {
   return (
-    <div className="relative h-96 border-l border-b border-white/30 ml-8 mb-4">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.98, y: -8 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      className="relative h-96 border-l border-b border-white/30 ml-8 mb-4"
+    >
       {type === "points" && [18, 30, 42, 54, 66, 78].map((x, i) => (
-        <span key={x} className="absolute w-4 h-4 rounded-full bg-[var(--color-accent)]" style={{ left: `${x}%`, top: `${75 - i * 10}%` }} />
+        <motion.span
+          key={x}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: i * 0.05, duration: 0.25 }}
+          className="absolute w-4 h-4 rounded-full bg-[var(--color-accent)]"
+          style={{ left: `${x}%`, top: `${75 - i * 10}%` }}
+        />
       ))}
       {type === "bars" && [38, 64, 46, 74].map((h, i) => (
-        <span key={i} className="absolute bottom-0 w-12 bg-[var(--color-accent)]/80 rounded-t" style={{ left: `${16 + i * 20}%`, height: `${h}%` }} />
+        <motion.span
+          key={i}
+          initial={{ height: "0%", opacity: 0.4 }}
+          animate={{ height: `${h}%`, opacity: 1 }}
+          transition={{ delay: i * 0.06, duration: 0.35, ease: "easeOut" }}
+          className="absolute bottom-0 w-12 bg-[var(--color-accent)]/80 rounded-t"
+          style={{ left: `${16 + i * 20}%` }}
+        />
       ))}
       {type === "line" && (
         <svg className="absolute inset-0 w-full h-full overflow-visible">
-          <polyline points="40,260 120,220 200,150 280,175 360,80 440,55" fill="none" stroke="#3498DB" strokeWidth="4" />
-          {[["40", "260"], ["120", "220"], ["200", "150"], ["280", "175"], ["360", "80"], ["440", "55"]].map(([cx, cy]) => (
-            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="6" fill="#3498DB" />
+          <motion.polyline
+            points="40,260 120,220 200,150 280,175 360,80 440,55"
+            fill="none"
+            stroke="#3498DB"
+            strokeWidth="4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.55, ease: "easeInOut" }}
+          />
+          {[["40", "260"], ["120", "220"], ["200", "150"], ["280", "175"], ["360", "80"], ["440", "55"]].map(([cx, cy], i) => (
+            <motion.circle
+              key={`${cx}-${cy}`}
+              cx={cx}
+              cy={cy}
+              r="6"
+              fill="#3498DB"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + i * 0.05, duration: 0.2 }}
+            />
           ))}
         </svg>
       )}
       {type === "hist" && [18, 32, 66, 88, 72, 42, 24].map((h, i) => (
-        <span key={i} className="absolute bottom-0 bg-[var(--color-accent)]/80 border border-[var(--color-background)]" style={{ left: `${8 + i * 12}%`, width: "12%", height: `${h}%` }} />
+        <motion.span
+          key={i}
+          initial={{ height: "0%", opacity: 0.35 }}
+          animate={{ height: `${h}%`, opacity: 1 }}
+          transition={{ delay: i * 0.035, duration: 0.32, ease: "easeOut" }}
+          className="absolute bottom-0 bg-[var(--color-accent)]/80 border border-[var(--color-background)]"
+          style={{ left: `${8 + i * 12}%`, width: "12%" }}
+        />
       ))}
-      {type === "box" && [18, 48, 78].map((x, i) => (
-        <div key={x} className="absolute bottom-10 w-20" style={{ left: `${x}%` }}>
-          <span className="absolute left-1/2 -translate-x-1/2 bottom-0 h-52 border-l border-[var(--color-accent)]" />
-          <span className="absolute left-0 bottom-16 w-20 h-24 border-2 border-[var(--color-accent)] bg-[var(--color-accent)]/15" />
-          <span className="absolute left-0 bottom-28 w-20 border-t-2 border-white" />
-          <span className="absolute left-5 bottom-52 w-10 border-t-2 border-[var(--color-accent)]" />
-          <span className="absolute left-5 bottom-0 w-10 border-t-2 border-[var(--color-accent)]" />
-          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm text-[var(--color-text-muted)]">{String.fromCharCode(65 + i)}</span>
-        </div>
+      {type === "box" && boxplots.map((box, i) => (
+        <motion.div
+          key={box.label}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.08, duration: 0.28 }}
+          className="absolute bottom-0 h-full w-20 -translate-x-1/2"
+          style={{ left: `${box.x}%` }}
+        >
+          <span
+            className="absolute left-1/2 -translate-x-1/2 border-l border-[var(--color-accent)]"
+            style={{ bottom: `${box.low}%`, height: `${box.high - box.low}%` }}
+          />
+          <span
+            className="absolute left-1/2 -translate-x-1/2 w-10 border-t-2 border-[var(--color-accent)]"
+            style={{ bottom: `${box.high}%` }}
+          />
+          <span
+            className="absolute left-1/2 -translate-x-1/2 w-10 border-t-2 border-[var(--color-accent)]"
+            style={{ bottom: `${box.low}%` }}
+          />
+          <motion.span
+            initial={{ height: "0%" }}
+            animate={{ height: `${box.q3 - box.q1}%` }}
+            transition={{ delay: 0.12 + i * 0.08, duration: 0.3, ease: "easeOut" }}
+            className="absolute left-0 w-20 border-2 border-[var(--color-accent)] bg-[var(--color-accent)]/15"
+            style={{ bottom: `${box.q1}%` }}
+          />
+          <span
+            className="absolute left-0 w-20 border-t-2 border-white"
+            style={{ bottom: `${box.median}%` }}
+          />
+          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm text-[var(--color-text-muted)]">{box.label}</span>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

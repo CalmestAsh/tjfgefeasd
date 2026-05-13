@@ -4,6 +4,7 @@ import { Braces, Layers, Plus, ScatterChart } from "lucide-react";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
 import "prismjs/themes/prism-tomorrow.css";
+import { CodeCard } from "../CodeCard";
 
 export const Functionalities = () => {
   useEffect(() => {
@@ -37,14 +38,7 @@ export const Functionalities = () => {
           </p>
         </motion.div>
 
-        <div className="rounded-2xl bg-[#1e1e1e] border border-white/10 shadow-2xl overflow-hidden mb-8">
-          <div className="bg-[#2d2d2d] px-4 py-3 font-mono text-sm text-gray-300 border-b border-gray-800">
-            estrutura_basica.R
-          </div>
-          <pre className="!m-0 !bg-transparent p-6 overflow-x-auto text-lg md:text-2xl">
-            <code className="language-r">{code}</code>
-          </pre>
-        </div>
+        <CodeCard title="estrutura_basica.R" code={code} className="mb-8" preClassName="text-lg md:text-2xl" />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {parts.map((part, index) => (

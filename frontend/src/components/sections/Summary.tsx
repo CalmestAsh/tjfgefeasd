@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Prism from "prismjs";
 import "prismjs/components/prism-r";
+import { CodeCard } from "../CodeCard";
 
 export const Summary = () => {
   useEffect(() => {
@@ -41,14 +42,7 @@ export const Summary = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-[#1e1e1e] border border-white/10 overflow-hidden">
-          <div className="bg-[#2d2d2d] px-4 py-3 font-mono text-sm text-gray-300 border-b border-gray-800">
-            contexto_tidyverse.R
-          </div>
-          <pre className="!m-0 !bg-transparent p-6 overflow-x-auto text-base md:text-lg">
-            <code className="language-r">{code}</code>
-          </pre>
-        </div>
+        <CodeCard title="contexto_tidyverse.R" code={code} preClassName="text-base md:text-lg" />
 
         <p className="mt-6 text-center text-[var(--color-text-muted)]">
           O importante aqui nao e explicar o %&gt;%, mas entender que o ggplot2 recebe uma tabela ja tratada e transforma ela em grafico.
